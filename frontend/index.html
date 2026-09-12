@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultado: Interés Fijo</title>
+    <link rel="stylesheet" href="estilo.css">
+    <!-- Importar Chart.js desde CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Título principal -->
+        <h1 class="title">Resultado: Interés Fijo</h1>
+
+        <!-- Tarjeta principal del gráfico -->
+        <div class="card chart-card">
+            <div class="chart-container">
+                <!-- El elemento canvas requerido por Chart.js -->
+                <canvas id="graficoInteresFijo" data-campo="grafico-interes-fijo"></canvas>
+            </div>
+            <!-- Indicador inferior (tasa de interés), se llena vía JS/API -->
+            <div class="chart-footer-label" id="etiquetaTasaInteres" data-campo="tasa-interes">--</div>
+        </div>
+
+        <!-- Tarjetas inferiores de resumen -->
+        <div class="summary-container">
+            <div class="card summary-card">
+                <span class="summary-title">Monto Inicial</span>
+                <!-- El backend/JS llena este valor dinámicamente -->
+                <span class="summary-value" id="montoInicial" data-campo="monto-inicial">--</span>
+            </div>
+
+            <div class="card summary-card">
+                <span class="summary-title">Interés Total</span>
+                <span class="summary-value" id="interesTotal" data-campo="interes-total">--</span>
+            </div>
+
+            <div class="card summary-card">
+                <span class="summary-title">Capital Final</span>
+                <span class="summary-value" id="capitalFinal" data-campo="capital-final">--</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script de configuración -->
+    <script src="intFijo.js"></script>
+</body>
+</html>
