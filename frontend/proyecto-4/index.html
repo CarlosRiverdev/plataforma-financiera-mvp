@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -10,7 +11,7 @@
 <link rel="stylesheet" href="css/estilos.css">
 </head>
 <body>
-
+ 
 <header class="encabezado">
   <div class="encabezado__marca">
     <span class="encabezado__titulo">Calculadora de interés</span>
@@ -20,11 +21,12 @@
     <button class="pestana pestana--activa" data-ventana="simple" aria-current="page">Interés simple</button>
     <button class="pestana" data-ventana="compuesto">Interés compuesto</button>
     <button class="pestana" data-ventana="grafica">Comparación</button>
+    <button class="pestana" data-ventana="historial">Historial</button>
   </nav>
 </header>
-
+ 
 <main class="lienzo">
-
+ 
   <!-- ══════════ VENTANA 1: INTERÉS SIMPLE ══════════ -->
   <section class="ventana ventana--visible" id="ventana-simple">
     <div class="ventana__intro">
@@ -32,7 +34,7 @@
       <p>El interés se calcula siempre sobre el capital inicial, así que el crecimiento es una línea recta.</p>
       <p class="formula">A = P · (1 + r · t)</p>
     </div>
-
+ 
     <div class="trabajo">
       <form class="formulario" id="form-simple" novalidate>
         <div class="campo">
@@ -43,7 +45,7 @@
           </div>
           <p class="campo__error" id="err-s-capital"></p>
         </div>
-
+ 
         <div class="campo">
           <label for="s-tasa">Tasa de interés anual</label>
           <div class="campo__caja">
@@ -52,7 +54,7 @@
           </div>
           <p class="campo__error" id="err-s-tasa"></p>
         </div>
-
+ 
         <div class="campo">
           <label for="s-tiempo">Tiempo</label>
           <div class="campo__caja">
@@ -61,13 +63,13 @@
           </div>
           <p class="campo__error" id="err-s-tiempo"></p>
         </div>
-
+ 
         <div class="acciones">
           <button type="submit" class="boton boton--principal">Calcular interés</button>
           <button type="reset" class="boton">Restablecer</button>
         </div>
       </form>
-
+ 
       <div class="resultado" id="res-simple" aria-live="polite">
         <div class="resultado__cifra">
           <span class="resultado__etiqueta">Capital final</span>
@@ -80,12 +82,12 @@
         </dl>
       </div>
     </div>
-
+ 
     <div class="panel-grafica">
       <h2>Evolución año por año</h2>
       <div class="lienzo-grafica"><canvas id="grafica-simple"></canvas></div>
     </div>
-
+ 
     <div class="panel-tabla">
       <h2>Detalle anual</h2>
       <div class="tabla-scroll">
@@ -96,7 +98,7 @@
       </div>
     </div>
   </section>
-
+ 
   <!-- ══════════ VENTANA 2: INTERÉS COMPUESTO ══════════ -->
   <section class="ventana" id="ventana-compuesto" hidden>
     <div class="ventana__intro">
@@ -104,7 +106,7 @@
       <p>Cada periodo el interés se suma al capital y vuelve a generar interés. Por eso la curva se acelera.</p>
       <p class="formula">A = P · (1 + r/n)<sup>n·t</sup></p>
     </div>
-
+ 
     <div class="trabajo">
       <form class="formulario" id="form-compuesto" novalidate>
         <div class="campo">
@@ -115,7 +117,7 @@
           </div>
           <p class="campo__error" id="err-c-capital"></p>
         </div>
-
+ 
         <div class="campo">
           <label for="c-tasa">Tasa de interés anual</label>
           <div class="campo__caja">
@@ -124,7 +126,7 @@
           </div>
           <p class="campo__error" id="err-c-tasa"></p>
         </div>
-
+ 
         <div class="campo">
           <label for="c-tiempo">Tiempo</label>
           <div class="campo__caja">
@@ -133,7 +135,7 @@
           </div>
           <p class="campo__error" id="err-c-tiempo"></p>
         </div>
-
+ 
         <div class="campo">
           <label for="c-frecuencia">Capitalización</label>
           <div class="campo__caja">
@@ -147,13 +149,13 @@
           </div>
           <p class="campo__error" id="err-c-frecuencia"></p>
         </div>
-
+ 
         <div class="acciones">
           <button type="submit" class="boton boton--principal">Calcular monto</button>
           <button type="reset" class="boton">Restablecer</button>
         </div>
       </form>
-
+ 
       <div class="resultado resultado--compuesto" id="res-compuesto" aria-live="polite">
         <div class="resultado__cifra">
           <span class="resultado__etiqueta">Capital final</span>
@@ -166,12 +168,12 @@
         </dl>
       </div>
     </div>
-
+ 
     <div class="panel-grafica">
       <h2>Evolución año por año</h2>
       <div class="lienzo-grafica"><canvas id="grafica-compuesto"></canvas></div>
     </div>
-
+ 
     <div class="panel-tabla">
       <h2>Detalle anual</h2>
       <div class="tabla-scroll">
@@ -182,14 +184,14 @@
       </div>
     </div>
   </section>
-
+ 
   <!-- ══════════ VENTANA 3: COMPARACIÓN ══════════ -->
   <section class="ventana" id="ventana-grafica" hidden>
     <div class="ventana__intro">
       <h1>Comparación</h1>
       <p>Las dos fórmulas sobre los mismos datos, para ver cuánto se separan con el tiempo.</p>
     </div>
-
+ 
     <form class="formulario formulario--fila" id="form-grafica" novalidate>
       <div class="campo">
         <label for="g-capital">Capital inicial</label>
@@ -232,7 +234,7 @@
         <button type="submit" class="boton boton--principal">Actualizar gráfica</button>
       </div>
     </form>
-
+ 
     <div class="panel-grafica panel-grafica--alto">
       <div class="leyenda">
         <span class="leyenda__item leyenda__item--simple">Interés simple</span>
@@ -240,7 +242,7 @@
       </div>
       <div class="lienzo-grafica lienzo-grafica--alto"><canvas id="grafica-comparativa"></canvas></div>
     </div>
-
+ 
     <div class="tira-datos" aria-live="polite">
       <div class="tira-datos__celda">
         <span>Capital final con interés simple</span>
@@ -260,14 +262,42 @@
       </div>
     </div>
   </section>
-
+ 
+  <!-- ══════════ VENTANA 4: HISTORIAL ══════════ -->
+  <section class="ventana" id="ventana-historial" hidden>
+    <div class="ventana__intro">
+      <h1>Historial</h1>
+      <p>Cada cálculo que hacés queda guardado acá, con los datos que usaste</p>
+      <p>y el resultado que salió.</p>
+    </div>
+ 
+    <div class="panel-tabla">
+      <div class="panel-tabla__barra">
+        <h2>Consultas guardadas <span class="contador" id="h-contador">0</span></h2>
+        <button class="boton boton--peligro" id="h-limpiar">Limpiar historial</button>
+      </div>
+      <div class="tabla-scroll tabla-scroll--alto">
+        <table class="tabla">
+          <thead>
+            <tr>
+              <th>Tipo</th><th>Capital</th><th>Tasa</th><th>Tiempo</th>
+              <th>Capital final</th><th>Interés</th><th>Fecha</th>
+            </tr>
+          </thead>
+          <tbody id="tabla-historial"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+ 
 </main>
-
+ 
 <footer class="pie">
   <p>Proyecto académico · HTML, CSS y Chart.js</p>
 </footer>
-
+ 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>
+ 
