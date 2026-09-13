@@ -207,6 +207,9 @@ function calcularVentanaSimple(evento) {
     </tr>`;
   }
   $('tabla-simple').innerHTML = filas;
+
+  // Solo se guarda cuando la persona pulsa Calcular, no en el arranque
+  if (evento) registrar('Simple', capital, tasa, anios, final, '');
 }
 
 /* ============================================================
@@ -245,6 +248,9 @@ function calcularVentanaCompuesta(evento) {
     </tr>`;
   }
   $('tabla-compuesto').innerHTML = filas;
+
+  const nombreFrec = $('c-frecuencia').options[$('c-frecuencia').selectedIndex].text.split(' (')[0];
+  if (evento) registrar('Compuesto', capital, tasa, anios, final, nombreFrec);
 }
 
 /* ============================================================
@@ -281,6 +287,87 @@ function calcularVentanaGrafica(evento) {
     if (cSerie[i] > sSerie[i] * 1.01) { cruce = 'Año ' + i; break; }
   }
   $('g-cruce').textContent = cruce;
+}
+
+/* ============================================================
+   VENTANA 4 — Historial
+   ============================================================ */
+
+const CLAVE_HISTORIAL = 'calculadora-interes:historial';
+const TOPE_HISTORIAL = 50;
+let historial = [];
+
+function cargarHistorial() {
+  try {
+    const guardado = localStorage.getItem(CLAVE_HISTORIAL);
+    historial = guardado ? JSON.parse(guardado) : [];
+  } catch (error) {
+    historial = [];
+  }
+}
+
+function guardarHistorial() {
+  try {
+    localStorage.setItem(CLAVE_HISTORIAL, JSON.stringify(historial));
+  } catch (error) {
+    // Si el navegador bloquea el almacenamiento, el historial sigue
+    // funcionando en memoria hasta que se cierre la pestaña.
+  }
+}
+
+function registrar(tipo, capital, tasa, anios, final, extra) {
+  historial.unshift({
+    tipo: tipo,
+    capital: capital,
+    tasa: tasa,
+    anios: anios,
+    final: final,
+    interes: final - capital,
+    extra: extra || '',
+    fecha: new Date().toISOString()
+  });
+  if (historial.length > TOPE_HISTORIAL) historial.length = TOPE_HISTORIAL;
+  guardarHistorial();
+  pintarHistorial();
+}
+
+function fechaCorta(iso) {
+  const d = new Date(iso);
+  return d.toLocaleDateString('es-BO', { day: '2-digit', month: '2-digit' }) +
+    ' · ' + d.toLocaleTimeString('es-BO', { hour: '2-digit', minute: '2-digit' });
+}
+
+function pintarHistorial() {
+  const cuerpo = $('tabla-historial');
+  $('h-contador').textContent = historial.length;
+
+  if (historial.length === 0) {
+    cuerpo.innerHTML = '<tr><td colspan="7" class="tabla__vacio">' +
+      'Todavía no hay consultas. Calculá algo en las otras ventanas y aparece acá.</td></tr>';
+    return;
+  }
+
+  cuerpo.innerHTML = historial.map((r) => {
+    const clase = r.tipo === 'Simple' ? 'simple' : 'compuesto';
+    const tiempo = r.anios + (r.anios === 1 ? ' año' : ' años');
+    return `<tr>
+      <td><span class="etiqueta-tipo etiqueta-tipo--${clase}">${r.tipo}</span></td>
+      <td>${bs(r.capital)}</td>
+      <td>${porcentaje.format(r.tasa)} %${r.extra ? ' · ' + r.extra : ''}</td>
+      <td>${tiempo}</td>
+      <td>${bs(r.final)}</td>
+      <td class="ganancia">${bs(r.interes)}</td>
+      <td class="fecha">${fechaCorta(r.fecha)}</td>
+    </tr>`;
+  }).join('');
+}
+
+function limpiarHistorial() {
+  if (historial.length === 0) return;
+  if (!confirm('Se van a borrar las ' + historial.length + ' consultas guardadas. ¿Seguimos?')) return;
+  historial = [];
+  guardarHistorial();
+  pintarHistorial();
 }
 
 /* ============================================================
@@ -348,6 +435,10 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   });
+
+  $('h-limpiar').addEventListener('click', limpiarHistorial);
+  cargarHistorial();
+  pintarHistorial();
 
   // Primer cálculo con los valores de ejemplo
   calcularVentanaSimple();
