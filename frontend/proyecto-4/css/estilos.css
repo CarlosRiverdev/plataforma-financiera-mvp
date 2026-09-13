@@ -1,0 +1,369 @@
+/* ============================================================
+   Calculadora de interés simple y compuesto
+   Hoja de estilos principal
+   ============================================================ */
+
+:root{
+  --tinta:#14202a;
+  --tinta-suave:#5a6872;
+  --papel:#eef0ea;
+  --superficie:#ffffff;
+  --linea:#d3d7cc;
+  --linea-fina:#e6e8e1;
+  --simple:#2c5d8f;
+  --compuesto:#17714a;
+  --alerta:#a3321e;
+
+  --fuente:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --fuente-num:"IBM Plex Mono",ui-monospace,"Courier New",monospace;
+
+  --ancho:1080px;
+  --radio:4px;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+
+html{-webkit-text-size-adjust:100%}
+
+body{
+  margin:0;
+  font-family:var(--fuente);
+  font-size:16px;
+  line-height:1.55;
+  color:var(--tinta);
+  background-color:var(--papel);
+  /* papel milimetrado: el tema del proyecto es graficar crecimiento */
+  background-image:
+    linear-gradient(to right,rgba(20,32,42,.045) 1px,transparent 1px),
+    linear-gradient(to bottom,rgba(20,32,42,.045) 1px,transparent 1px);
+  background-size:28px 28px;
+}
+
+h1,h2{margin:0;font-weight:600;letter-spacing:-.01em}
+p{margin:0}
+
+:focus-visible{outline:2px solid var(--simple);outline-offset:2px}
+
+/* ---------- Encabezado y pestañas ---------- */
+.encabezado{
+  background:var(--tinta);
+  color:#f4f6f2;
+  padding:18px 24px 0;
+}
+.encabezado__marca{
+  max-width:var(--ancho);
+  margin:0 auto 16px;
+  display:flex;
+  flex-wrap:wrap;
+  align-items:baseline;
+  gap:14px;
+}
+.encabezado__titulo{font-size:19px;font-weight:600;letter-spacing:-.015em}
+.encabezado__sub{font-size:13.5px;color:#9fb0ba}
+
+.pestanas{
+  max-width:var(--ancho);
+  margin:0 auto;
+  display:flex;
+  gap:4px;
+}
+.pestana{
+  font-family:inherit;
+  font-size:14.5px;
+  font-weight:500;
+  color:#b9c7cf;
+  background:transparent;
+  border:0;
+  border-bottom:3px solid transparent;
+  padding:10px 16px;
+  cursor:pointer;
+  transition:color .12s ease;
+}
+.pestana:hover{color:#fff}
+.pestana--activa{
+  color:var(--tinta);
+  background:var(--papel);
+  border-bottom-color:var(--papel);
+  border-radius:var(--radio) var(--radio) 0 0;
+}
+
+/* ---------- Estructura ---------- */
+.lienzo{
+  max-width:var(--ancho);
+  margin:0 auto;
+  padding:32px 24px 56px;
+}
+
+.ventana{display:none}
+.ventana--visible{display:block}
+
+.ventana__intro{
+  border-left:3px solid var(--tinta);
+  padding-left:16px;
+  margin-bottom:28px;
+  max-width:62ch;
+}
+.ventana__intro h1{font-size:28px;margin-bottom:6px}
+.ventana__intro p{color:var(--tinta-suave);font-size:15px}
+
+#ventana-compuesto .ventana__intro{border-left-color:var(--compuesto)}
+#ventana-simple .ventana__intro{border-left-color:var(--simple)}
+
+.formula{
+  font-family:var(--fuente-num);
+  font-size:15px;
+  color:var(--tinta) !important;
+  margin-top:10px !important;
+  letter-spacing:.02em;
+}
+.formula sup{font-size:11px}
+
+/* ---------- Zona de trabajo: formulario + resultado ---------- */
+.trabajo{
+  display:grid;
+  grid-template-columns:1fr 340px;
+  gap:20px;
+  align-items:start;
+  margin-bottom:24px;
+}
+
+.formulario{
+  background:var(--superficie);
+  border:1px solid var(--linea);
+  border-radius:var(--radio);
+  padding:22px 24px 24px;
+}
+.formulario--fila{
+  display:grid;
+  grid-template-columns:repeat(4,1fr) auto;
+  gap:16px;
+  align-items:start;
+  margin-bottom:20px;
+}
+
+.campo{margin-bottom:18px}
+.formulario--fila .campo{margin-bottom:0}
+
+.campo label{
+  display:block;
+  font-size:13px;
+  font-weight:500;
+  color:var(--tinta-suave);
+  margin-bottom:6px;
+}
+
+.campo__caja{
+  display:flex;
+  align-items:center;
+  border:1px solid var(--linea);
+  border-radius:var(--radio);
+  background:var(--superficie);
+  overflow:hidden;
+}
+.campo__caja:focus-within{border-color:var(--tinta);box-shadow:0 0 0 3px rgba(20,32,42,.08)}
+
+.campo__unidad{
+  font-family:var(--fuente-num);
+  font-size:13px;
+  color:var(--tinta-suave);
+  padding:0 10px;
+  border-right:1px solid var(--linea-fina);
+  align-self:stretch;
+  display:flex;
+  align-items:center;
+  background:#fafbf8;
+}
+.campo__unidad--der{border-right:0;border-left:1px solid var(--linea-fina)}
+
+.campo__caja input,
+.campo__caja select{
+  flex:1;
+  min-width:0;
+  font-family:var(--fuente-num);
+  font-size:15px;
+  color:var(--tinta);
+  border:0;
+  background:transparent;
+  padding:10px 12px;
+}
+.campo__caja select{font-family:var(--fuente);cursor:pointer}
+.campo__caja input:focus,
+.campo__caja select:focus{outline:none}
+
+.campo__error{
+  font-size:12.5px;
+  color:var(--alerta);
+  min-height:17px;
+  margin-top:4px;
+}
+.campo--invalido .campo__caja{border-color:var(--alerta);background:#fdf6f4}
+
+/* ---------- Botones ---------- */
+.acciones{display:flex;gap:10px;margin-top:22px}
+.acciones--fila{margin-top:0;align-self:end;padding-bottom:21px}
+
+.boton{
+  font-family:inherit;
+  font-size:14.5px;
+  font-weight:500;
+  padding:11px 18px;
+  border:1px solid var(--linea);
+  border-radius:var(--radio);
+  background:var(--superficie);
+  color:var(--tinta);
+  cursor:pointer;
+  transition:background .12s ease,border-color .12s ease;
+}
+.boton:hover{border-color:var(--tinta)}
+.boton--principal{background:var(--tinta);border-color:var(--tinta);color:#fff}
+.boton--principal:hover{background:#0c1820}
+
+/* ---------- Resultado ---------- */
+.resultado{
+  background:var(--tinta);
+  color:#eef2f5;
+  border-radius:var(--radio);
+  padding:24px;
+}
+.resultado__etiqueta{
+  display:block;
+  font-size:13px;
+  color:#9fb0ba;
+  margin-bottom:4px;
+}
+.resultado__monto{
+  display:block;
+  font-family:var(--fuente-num);
+  font-size:30px;
+  font-weight:500;
+  letter-spacing:-.02em;
+  line-height:1.2;
+}
+.resultado__detalle{margin:20px 0 0;border-top:1px solid rgba(255,255,255,.14)}
+.resultado__detalle > div{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  padding:9px 0;
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+.resultado__detalle dt{font-size:13.5px;color:#9fb0ba}
+.resultado__detalle dd{margin:0;font-family:var(--fuente-num);font-size:14px}
+.ganancia{color:#6fd3a0}
+.resultado--compuesto .resultado__monto{color:#6fd3a0}
+
+/* ---------- Gráficas ---------- */
+.panel-grafica,
+.panel-tabla{
+  background:var(--superficie);
+  border:1px solid var(--linea);
+  border-radius:var(--radio);
+  padding:20px 24px 24px;
+  margin-bottom:20px;
+}
+.panel-grafica h2,
+.panel-tabla h2{font-size:15px;margin-bottom:14px}
+
+.lienzo-grafica{position:relative;height:260px}
+.lienzo-grafica--alto{height:380px}
+
+.leyenda{display:flex;gap:20px;margin-bottom:14px}
+.leyenda__item{
+  font-size:13.5px;
+  color:var(--tinta-suave);
+  display:flex;
+  align-items:center;
+  gap:7px;
+}
+.leyenda__item::before{
+  content:"";
+  width:18px;
+  height:3px;
+  border-radius:2px;
+  background:currentColor;
+}
+.leyenda__item--simple{color:var(--simple)}
+.leyenda__item--compuesto{color:var(--compuesto)}
+
+/* ---------- Tabla ---------- */
+.tabla-scroll{overflow-x:auto;max-height:300px;overflow-y:auto}
+.tabla{width:100%;border-collapse:collapse;font-size:14px}
+.tabla th{
+  position:sticky;
+  top:0;
+  background:var(--superficie);
+  text-align:right;
+  font-size:12.5px;
+  font-weight:500;
+  color:var(--tinta-suave);
+  padding:8px 12px;
+  border-bottom:1px solid var(--linea);
+  white-space:nowrap;
+}
+.tabla th:first-child,
+.tabla td:first-child{text-align:left}
+.tabla td{
+  font-family:var(--fuente-num);
+  text-align:right;
+  padding:8px 12px;
+  border-bottom:1px solid var(--linea-fina);
+  white-space:nowrap;
+}
+.tabla tbody tr:hover{background:#f7f9f4}
+.tabla__vacio{
+  font-family:var(--fuente) !important;
+  text-align:center !important;
+  color:var(--tinta-suave);
+  padding:22px 0 !important;
+}
+
+/* ---------- Tira de datos (ventana 3) ---------- */
+.tira-datos{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  background:var(--superficie);
+  border:1px solid var(--linea);
+  border-radius:var(--radio);
+}
+.tira-datos__celda{
+  padding:16px 20px;
+  border-right:1px solid var(--linea-fina);
+}
+.tira-datos__celda:last-child{border-right:0}
+.tira-datos__celda span{display:block;font-size:12.5px;color:var(--tinta-suave);margin-bottom:5px}
+.tira-datos__celda strong{font-family:var(--fuente-num);font-size:18px;font-weight:500}
+.tira-datos .ganancia{color:var(--compuesto)}
+
+/* ---------- Pie ---------- */
+.pie{
+  max-width:var(--ancho);
+  margin:0 auto;
+  padding:0 24px 36px;
+  font-size:13px;
+  color:var(--tinta-suave);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width:900px){
+  .trabajo{grid-template-columns:1fr}
+  .formulario--fila{grid-template-columns:repeat(2,1fr)}
+  .acciones--fila{grid-column:1 / -1;padding-bottom:0}
+  .tira-datos{grid-template-columns:repeat(2,1fr)}
+  .tira-datos__celda:nth-child(2){border-right:0}
+  .tira-datos__celda:nth-child(-n+2){border-bottom:1px solid var(--linea-fina)}
+}
+@media (max-width:560px){
+  .lienzo{padding:24px 16px 40px}
+  .encabezado{padding:16px 16px 0}
+  .pestanas{overflow-x:auto}
+  .pestana{white-space:nowrap;padding:10px 12px}
+  .formulario--fila{grid-template-columns:1fr}
+  .tira-datos{grid-template-columns:1fr}
+  .tira-datos__celda{border-right:0;border-bottom:1px solid var(--linea-fina)}
+  .ventana__intro h1{font-size:23px}
+  .resultado__monto{font-size:26px}
+}
+
+@media (prefers-reduced-motion:reduce){
+  *{transition:none !important;animation:none !important}
+}

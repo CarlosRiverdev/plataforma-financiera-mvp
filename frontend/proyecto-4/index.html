@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Calculadora de interés simple y compuesto</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+
+<header class="encabezado">
+  <div class="encabezado__marca">
+    <span class="encabezado__titulo">Calculadora de interés</span>
+    <span class="encabezado__sub">Simple y compuesto · proyección a varios años</span>
+  </div>
+  <nav class="pestanas" aria-label="Ventanas de la aplicación">
+    <button class="pestana pestana--activa" data-ventana="simple" aria-current="page">Interés simple</button>
+    <button class="pestana" data-ventana="compuesto">Interés compuesto</button>
+    <button class="pestana" data-ventana="grafica">Comparación</button>
+  </nav>
+</header>
+
+<main class="lienzo">
+
+  <!-- ══════════ VENTANA 1: INTERÉS SIMPLE ══════════ -->
+  <section class="ventana ventana--visible" id="ventana-simple">
+    <div class="ventana__intro">
+      <h1>Interés simple</h1>
+      <p>El interés se calcula siempre sobre el capital inicial, así que el crecimiento es una línea recta.</p>
+      <p class="formula">A = P · (1 + r · t)</p>
+    </div>
+
+    <div class="trabajo">
+      <form class="formulario" id="form-simple" novalidate>
+        <div class="campo">
+          <label for="s-capital">Capital inicial</label>
+          <div class="campo__caja">
+            <span class="campo__unidad">Bs</span>
+            <input type="number" id="s-capital" value="10000" step="0.01" min="0.01" autocomplete="off">
+          </div>
+          <p class="campo__error" id="err-s-capital"></p>
+        </div>
+
+        <div class="campo">
+          <label for="s-tasa">Tasa de interés anual</label>
+          <div class="campo__caja">
+            <input type="number" id="s-tasa" value="8.5" step="0.01" min="0" autocomplete="off">
+            <span class="campo__unidad campo__unidad--der">%</span>
+          </div>
+          <p class="campo__error" id="err-s-tasa"></p>
+        </div>
+
+        <div class="campo">
+          <label for="s-tiempo">Tiempo</label>
+          <div class="campo__caja">
+            <input type="number" id="s-tiempo" value="10" step="1" min="1" max="60" autocomplete="off">
+            <span class="campo__unidad campo__unidad--der">años</span>
+          </div>
+          <p class="campo__error" id="err-s-tiempo"></p>
+        </div>
+
+        <div class="acciones">
+          <button type="submit" class="boton boton--principal">Calcular interés</button>
+          <button type="reset" class="boton">Restablecer</button>
+        </div>
+      </form>
+
+      <div class="resultado" id="res-simple" aria-live="polite">
+        <div class="resultado__cifra">
+          <span class="resultado__etiqueta">Capital final</span>
+          <strong class="resultado__monto" id="s-final">Bs 0,00</strong>
+        </div>
+        <dl class="resultado__detalle">
+          <div><dt>Capital inicial</dt><dd id="s-inicial">Bs 0,00</dd></div>
+          <div><dt>Interés ganado</dt><dd class="ganancia" id="s-interes">Bs 0,00</dd></div>
+          <div><dt>Crecimiento total</dt><dd id="s-porcentaje">0 %</dd></div>
+        </dl>
+      </div>
+    </div>
+
+    <div class="panel-grafica">
+      <h2>Evolución año por año</h2>
+      <div class="lienzo-grafica"><canvas id="grafica-simple"></canvas></div>
+    </div>
+
+    <div class="panel-tabla">
+      <h2>Detalle anual</h2>
+      <div class="tabla-scroll">
+        <table class="tabla">
+          <thead><tr><th>Año</th><th>Interés del año</th><th>Interés acumulado</th><th>Capital</th></tr></thead>
+          <tbody id="tabla-simple"><tr><td colspan="4" class="tabla__vacio">Calculá para ver el detalle.</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ VENTANA 2: INTERÉS COMPUESTO ══════════ -->
+  <section class="ventana" id="ventana-compuesto" hidden>
+    <div class="ventana__intro">
+      <h1>Interés compuesto</h1>
+      <p>Cada periodo el interés se suma al capital y vuelve a generar interés. Por eso la curva se acelera.</p>
+      <p class="formula">A = P · (1 + r/n)<sup>n·t</sup></p>
+    </div>
+
+    <div class="trabajo">
+      <form class="formulario" id="form-compuesto" novalidate>
+        <div class="campo">
+          <label for="c-capital">Capital inicial</label>
+          <div class="campo__caja">
+            <span class="campo__unidad">Bs</span>
+            <input type="number" id="c-capital" value="10000" step="0.01" min="0.01" autocomplete="off">
+          </div>
+          <p class="campo__error" id="err-c-capital"></p>
+        </div>
+
+        <div class="campo">
+          <label for="c-tasa">Tasa de interés anual</label>
+          <div class="campo__caja">
+            <input type="number" id="c-tasa" value="8.5" step="0.01" min="0" autocomplete="off">
+            <span class="campo__unidad campo__unidad--der">%</span>
+          </div>
+          <p class="campo__error" id="err-c-tasa"></p>
+        </div>
+
+        <div class="campo">
+          <label for="c-tiempo">Tiempo</label>
+          <div class="campo__caja">
+            <input type="number" id="c-tiempo" value="10" step="1" min="1" max="60" autocomplete="off">
+            <span class="campo__unidad campo__unidad--der">años</span>
+          </div>
+          <p class="campo__error" id="err-c-tiempo"></p>
+        </div>
+
+        <div class="campo">
+          <label for="c-frecuencia">Capitalización</label>
+          <div class="campo__caja">
+            <select id="c-frecuencia">
+              <option value="1">Anual (1 vez al año)</option>
+              <option value="2">Semestral (2)</option>
+              <option value="4">Trimestral (4)</option>
+              <option value="12" selected>Mensual (12)</option>
+              <option value="365">Diaria (365)</option>
+            </select>
+          </div>
+          <p class="campo__error" id="err-c-frecuencia"></p>
+        </div>
+
+        <div class="acciones">
+          <button type="submit" class="boton boton--principal">Calcular monto</button>
+          <button type="reset" class="boton">Restablecer</button>
+        </div>
+      </form>
+
+      <div class="resultado resultado--compuesto" id="res-compuesto" aria-live="polite">
+        <div class="resultado__cifra">
+          <span class="resultado__etiqueta">Capital final</span>
+          <strong class="resultado__monto" id="c-final">Bs 0,00</strong>
+        </div>
+        <dl class="resultado__detalle">
+          <div><dt>Capital inicial</dt><dd id="c-inicial">Bs 0,00</dd></div>
+          <div><dt>Interés ganado</dt><dd class="ganancia" id="c-interes">Bs 0,00</dd></div>
+          <div><dt>Tasa efectiva anual</dt><dd id="c-efectiva">0 %</dd></div>
+        </dl>
+      </div>
+    </div>
+
+    <div class="panel-grafica">
+      <h2>Evolución año por año</h2>
+      <div class="lienzo-grafica"><canvas id="grafica-compuesto"></canvas></div>
+    </div>
+
+    <div class="panel-tabla">
+      <h2>Detalle anual</h2>
+      <div class="tabla-scroll">
+        <table class="tabla">
+          <thead><tr><th>Año</th><th>Capital al inicio</th><th>Interés del año</th><th>Capital al cierre</th></tr></thead>
+          <tbody id="tabla-compuesto"><tr><td colspan="4" class="tabla__vacio">Calculá para ver el detalle.</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ VENTANA 3: COMPARACIÓN ══════════ -->
+  <section class="ventana" id="ventana-grafica" hidden>
+    <div class="ventana__intro">
+      <h1>Comparación</h1>
+      <p>Las dos fórmulas sobre los mismos datos, para ver cuánto se separan con el tiempo.</p>
+    </div>
+
+    <form class="formulario formulario--fila" id="form-grafica" novalidate>
+      <div class="campo">
+        <label for="g-capital">Capital inicial</label>
+        <div class="campo__caja">
+          <span class="campo__unidad">Bs</span>
+          <input type="number" id="g-capital" value="10000" step="0.01" min="0.01" autocomplete="off">
+        </div>
+        <p class="campo__error" id="err-g-capital"></p>
+      </div>
+      <div class="campo">
+        <label for="g-tasa">Tasa anual</label>
+        <div class="campo__caja">
+          <input type="number" id="g-tasa" value="8.5" step="0.01" min="0" autocomplete="off">
+          <span class="campo__unidad campo__unidad--der">%</span>
+        </div>
+        <p class="campo__error" id="err-g-tasa"></p>
+      </div>
+      <div class="campo">
+        <label for="g-tiempo">Tiempo</label>
+        <div class="campo__caja">
+          <input type="number" id="g-tiempo" value="10" step="1" min="1" max="60" autocomplete="off">
+          <span class="campo__unidad campo__unidad--der">años</span>
+        </div>
+        <p class="campo__error" id="err-g-tiempo"></p>
+      </div>
+      <div class="campo">
+        <label for="g-frecuencia">Capitalización</label>
+        <div class="campo__caja">
+          <select id="g-frecuencia">
+            <option value="1">Anual</option>
+            <option value="2">Semestral</option>
+            <option value="4">Trimestral</option>
+            <option value="12" selected>Mensual</option>
+            <option value="365">Diaria</option>
+          </select>
+        </div>
+        <p class="campo__error" id="err-g-frecuencia"></p>
+      </div>
+      <div class="acciones acciones--fila">
+        <button type="submit" class="boton boton--principal">Actualizar gráfica</button>
+      </div>
+    </form>
+
+    <div class="panel-grafica panel-grafica--alto">
+      <div class="leyenda">
+        <span class="leyenda__item leyenda__item--simple">Interés simple</span>
+        <span class="leyenda__item leyenda__item--compuesto">Interés compuesto</span>
+      </div>
+      <div class="lienzo-grafica lienzo-grafica--alto"><canvas id="grafica-comparativa"></canvas></div>
+    </div>
+
+    <div class="tira-datos" aria-live="polite">
+      <div class="tira-datos__celda">
+        <span>Capital final con interés simple</span>
+        <strong id="g-final-simple">Bs 0,00</strong>
+      </div>
+      <div class="tira-datos__celda">
+        <span>Capital final con interés compuesto</span>
+        <strong id="g-final-compuesto">Bs 0,00</strong>
+      </div>
+      <div class="tira-datos__celda">
+        <span>Diferencia al final del periodo</span>
+        <strong class="ganancia" id="g-diferencia">Bs 0,00</strong>
+      </div>
+      <div class="tira-datos__celda">
+        <span>Se separan de forma notoria desde</span>
+        <strong id="g-cruce">—</strong>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="pie">
+  <p>Proyecto académico · HTML, CSS y Chart.js</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
