@@ -1,27 +1,14 @@
-# Dependencias Node
 node_modules/
-npm-debug.log
-yarn-error.log
-
-# Entornos y Secretos (¡Crítico!)
+.next/
+dist/
+build/
 .env
 .env.local
 .env.*.local
-
-# Builds y compilados
-dist/
-.next/
-out/
-build/
-
-# Configuraciones de Editores de Código
-.idea/             # Excluye configuraciones de la suite JetBrains
-*.iml
-.vscode/           # Excluye configuraciones de VS Code
-*.suo
-*.ntvs*
-*.njsproj
-
-# Sistema Operativo
+*.log
 .DS_Store
 Thumbs.db
+.idea/
+.vscode/
+prisma/dev.db
+prisma/dev.db-journal

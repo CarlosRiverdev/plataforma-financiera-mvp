@@ -1,23 +1,15 @@
 {
   "compilerOptions": {
-    "baseUrl": "./",
-    "module": "nodenext",
-    "moduleResolution": "nodenext",
-    "resolvePackageJsonExports": true,
-    "esModuleInterop": true,
-    "isolatedModules": true,
-    "declaration": true,
-    "removeComments": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "allowSyntheticDefaultImports": true,
-    "target": "ES2023",
-    "sourceMap": true,
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "lib": ["ES2022"],
     "outDir": "./dist",
-    "incremental": true,
-    "skipLibCheck": true,
+    "rootDir": "./src",
     "strict": true,
-    "strictPropertyInitialization": false,
-    "types": ["vitest/globals", "node"]
-  }
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["src/**/*"]
 }
