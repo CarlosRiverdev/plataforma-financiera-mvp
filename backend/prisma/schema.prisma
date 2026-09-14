@@ -1,0 +1,22 @@
+// Prisma schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model RegistroFinanciero {
+  id                    Int      @id @default(autoincrement())
+  modelo_calculo        String
+  clasificacion_flujo    String
+  capital_base          Float
+  tasa_interes          Float
+  periodos_plazo        Int
+  monto_proyectado      Float
+  justificacion_contextual String?
+  fecha_operacion       DateTime @default(now())
+}
